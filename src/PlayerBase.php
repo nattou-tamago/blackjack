@@ -8,7 +8,7 @@ abstract class PlayerBase
 {
     protected string $name;
     protected array $hands = [];
-    protected int $point = 0;
+    // protected int $point = 0;
     protected bool $bust = false;
 
     const CARD_POINT = [
@@ -44,9 +44,26 @@ abstract class PlayerBase
 
     protected function getPlayerPoint(): int
     {
-        return array_sum(array_map(function (Card $card) {
+        $hasA = in_array('A', array_map(function (Card $card) {
+            return $card->getNumber();
+        }, $this->hands));
+
+        $point = array_sum(array_map(function (Card $card) {
             return self::CARD_POINT[$card->getNumber()];
         }, $this->hands));
+
+        if ($hasA) {
+            if ($point > 11) {
+                return $point;
+            }
+            return $point + 10;
+        } else {
+            return $point;
+        }
+
+        // return array_sum(array_map(function (Card $card) {
+        //     return self::CARD_POINT[$card->getNumber()];
+        // }, $this->hands));
     }
 
     protected function displayPoint(): void
