@@ -10,14 +10,19 @@ require_once('Evaluator.php');
 
 echo 'ブラックジャックを開始します。' . PHP_EOL;
 
+
 $deck = new Deck();
 $user = new User($deck);
 $dealer = new Dealer($deck);
+$evaluator = new Evaluator();
 
 $userResult = $user->play($deck);
-$dealerResult = $dealer->play($deck);
 
-$results = [$userResult, $dealerResult];
+if ($userResult['bust']) {
+    $evaluator->getWinner([$userResult]);
+} else {
+    $dealerResult = $dealer->play($deck);
+    $evaluator->getWinner([$userResult, $dealerResult]);
+}
 
-$evaluator = new Evaluator();
-$evaluator->getWinner($results);
+echo 'ブラックジャックを終了します。' . PHP_EOL;

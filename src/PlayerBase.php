@@ -60,10 +60,6 @@ abstract class PlayerBase
         } else {
             return $point;
         }
-
-        // return array_sum(array_map(function (Card $card) {
-        //     return self::CARD_POINT[$card->getNumber()];
-        // }, $this->hands));
     }
 
     protected function displayPoint(): void
