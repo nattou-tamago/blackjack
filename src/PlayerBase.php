@@ -8,7 +8,6 @@ abstract class PlayerBase
 {
     protected string $name;
     protected array $hands = [];
-    // protected int $point = 0;
     protected bool $bust = false;
 
     const CARD_POINT = [
