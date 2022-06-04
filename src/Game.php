@@ -31,11 +31,16 @@ class Game
             $fund -= $latch;
 
             $deck = new Deck();
-            $user = new User($deck);
+            $user = new User($deck, $fund, $latch);
             $dealer = new Dealer($deck);
             $evaluator = new Evaluator();
 
             $userResult = $user->play($deck);
+
+            if ($userResult['doubleDown']) {
+                $fund -= $latch;
+                $latch *= 2;
+            }
 
             if ($userResult['bust']) {
                 $judgmentResult = $evaluator->judge([$userResult]);
