@@ -10,8 +10,10 @@ class User extends PlayerBase
     const HIT = 'Hit';
     const STAND = 'Stand';
     const DOUBLE_DOWN = 'DoubleDown';
+    const SURRENDER = 'Surrender';
 
     private bool $isDoubleDown = false;
+    private bool $isSurrender = false;
 
     public function __construct(Deck $deck, float $fund, float $latch)
     {
@@ -64,6 +66,11 @@ class User extends PlayerBase
                     break;
                 }
                 break;
+            } elseif ($input === self::SURRENDER) {
+                echo 'サレンダー。' . PHP_EOL;
+
+                $this->isSurrender = true;
+                break;
             }
         }
 
@@ -72,6 +79,7 @@ class User extends PlayerBase
             'bust' => $this->bust,
             'point' => $this->getPlayerPoint(),
             'doubleDown' => $this->isDoubleDown,
+            'surrender' => $this->isSurrender,
         ];
     }
 
@@ -81,7 +89,7 @@ class User extends PlayerBase
         echo 'アクションを選択してください。' . PHP_EOL;
 
         if ($counter === 0 && $fund >= $latch) {
-            echo '1：ヒット（カードを引く） 2：スタンド（カードを引かない） 3：ダブルダウン（賭け金を2倍にして1枚だけカードを引く）' . PHP_EOL;
+            echo '1：ヒット（カードを引く） 2：スタンド（カードを引かない） 3：ダブルダウン（賭け金を2倍にして1枚だけカードを引く） 4：サレンダー（賭け金を半分支払い、勝負を降りる）' . PHP_EOL;
             echo '1～3の数字を入力してください。' . PHP_EOL;
             while (true) {
                 $input = (int) trim(fgets(STDIN));
@@ -91,6 +99,23 @@ class User extends PlayerBase
                     return self::STAND;
                 } elseif ($input === 3) {
                     return self::DOUBLE_DOWN;
+                } elseif ($input === 4) {
+                    return self::SURRENDER;
+                } else {
+                    echo '1～3の数字を入力してください。' . PHP_EOL;
+                }
+            }
+        } elseif ($counter === 0) {
+            echo '1：ヒット（カードを引く） 2：スタンド（カードを引かない） 3：サレンダー（賭け金を半分支払い、勝負を降りる）' . PHP_EOL;
+            echo '1～3の数字を入力してください。' . PHP_EOL;
+            while (true) {
+                $input = (int) trim(fgets(STDIN));
+                if ($input === 1) {
+                    return self::HIT;
+                } elseif ($input === 2) {
+                    return self::STAND;
+                } elseif ($input === 3) {
+                    return self::SURRENDER;
                 } else {
                     echo '1～3の数字を入力してください。' . PHP_EOL;
                 }
