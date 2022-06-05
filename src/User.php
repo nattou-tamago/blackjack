@@ -88,8 +88,8 @@ class User extends PlayerBase
     {
         echo 'アクションを選択してください。' . PHP_EOL;
 
-        // if ($counter === 0 && $fund >= $latch && self::CARD_POINT[$this->hands[0]->getNumber()] === self::CARD_POINT[$this->hands[1]->getNumber()]) {
-        //     echo 'スプリット' . PHP_EOL;
+        // if ($counter === 0 && $fund >= $latch && $this->checkPair($this->hands[0], $this->hands[1])) {
+        //     echo 'スプリット!!!!!!!' . PHP_EOL;
         // }
 
         if ($counter === 0 && $fund >= $latch) {
@@ -106,7 +106,7 @@ class User extends PlayerBase
                 } elseif ($input === 4) {
                     return self::SURRENDER;
                 } else {
-                    echo '1～3の数字を入力してください。' . PHP_EOL;
+                    echo '1～4の数字を入力してください。' . PHP_EOL;
                 }
             }
         } elseif ($counter === 0) {
@@ -139,4 +139,13 @@ class User extends PlayerBase
             }
         }
     }
+
+    // private function checkPair(Card $card1, Card $card2): bool
+    // {
+    //     if (self::CARD_POINT[$card1->getNumber()] === self::CARD_POINT[$card2->getNumber()]) {
+    //         return true;
+    //     } else {
+    //         return false;
+    //     }
+    // }
 }
