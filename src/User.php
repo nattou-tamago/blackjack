@@ -88,9 +88,13 @@ class User extends PlayerBase
     {
         echo 'アクションを選択してください。' . PHP_EOL;
 
+        // if ($counter === 0 && $fund >= $latch && self::CARD_POINT[$this->hands[0]->getNumber()] === self::CARD_POINT[$this->hands[1]->getNumber()]) {
+        //     echo 'スプリット' . PHP_EOL;
+        // }
+
         if ($counter === 0 && $fund >= $latch) {
             echo '1：ヒット（カードを引く） 2：スタンド（カードを引かない） 3：ダブルダウン（賭け金を2倍にして1枚だけカードを引く） 4：サレンダー（賭け金を半分支払い、勝負を降りる）' . PHP_EOL;
-            echo '1～3の数字を入力してください。' . PHP_EOL;
+            echo '1～4の数字を入力してください。' . PHP_EOL;
             while (true) {
                 $input = (int) trim(fgets(STDIN));
                 if ($input === 1) {
