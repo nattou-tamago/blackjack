@@ -9,10 +9,17 @@ class Evaluator
         'win' => false,
         'lose' => false,
         'push' => false,
+        'surrender' => false,
     ];
 
     public function judge(array $results): array
     {
+        if ($results[0]['surrender']) {
+            echo $results[0]['name'] . 'の負けです。。。' . '賭け金を半分支払います。' . PHP_EOL;
+            $this->judgmentResult['surrender'] = true;
+            return $this->judgmentResult;
+        }
+
         if (count($results) === 1) {
             echo $results[0]['name'] . 'の得点が21を超えました。' . PHP_EOL;
             echo $results[0]['name'] . 'の負けです。。。' . PHP_EOL;

@@ -42,7 +42,7 @@ class Game
                 $latch *= 2;
             }
 
-            if ($userResult['bust']) {
+            if ($userResult['bust'] || $userResult['surrender']) {
                 $judgmentResult = $evaluator->judge([$userResult]);
             } else {
                 $dealerResult = $dealer->play($deck);
