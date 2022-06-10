@@ -10,6 +10,9 @@ abstract class PlayerBase
     protected array $hands = [];
     protected bool $bust = false;
 
+    const HIT = 'Hit';
+    const STAND = 'Stand';
+
     const CARD_POINT = [
         'A' => 1,
         '2' => 2,
