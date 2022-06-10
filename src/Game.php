@@ -25,7 +25,7 @@ class Game
         while ($continue) {
             echo 'あなたの資金は' . $fund . 'ドルです。' . PHP_EOL;
 
-            $latch = $this->getUserBet($fund);
+            $latch = $this->getUserInputBet($fund);
 
             echo $latch . 'ドルベットします。' . PHP_EOL;
             $fund -= $latch;
@@ -34,27 +34,54 @@ class Game
             $user = new User($deck, $fund, $latch);
             $dealer = new Dealer($deck);
             $evaluator = new Evaluator();
+            $calculator = new Calculator();
 
             $userResult = $user->play($deck);
+
+
 
             if ($userResult['doubleDown']) {
                 $fund -= $latch;
                 $latch *= 2;
             }
 
-            if ($userResult['bust'] || $userResult['surrender']) {
-                $judgmentResult = $evaluator->judge([$userResult]);
+            if ($userResult['split']) {
+                $fund -= $latch;
+                if ($userResult['splitOutcome'][0]['bust'] && $userResult['splitOutcome'][1]['bust']) {
+                    echo $userResult['splitOutcome'][0]['name'] . 'も' . $userResult['splitOutcome'][1]['name'] . 'も負けです。。。' . PHP_EOL;
+                } elseif ($userResult['splitOutcome'][0]['bust']) {
+                    echo $userResult['splitOutcome'][0]['name'] . 'は負けです。。。' . PHP_EOL;
+                    $dealerResult = $dealer->play($deck);
+                    $result = $evaluator->judgeSplit([$userResult['splitOutcome'][1], $dealerResult]);
+                    $fund = $calculator->calculateMoneyForSplit($fund, $latch, $result);
+
+                } elseif ($userResult['splitOutcome'][1]['bust']) {
+                    echo $userResult['splitOutcome'][1]['name'] . 'は負けです。。。' . PHP_EOL;
+                    $dealerResult = $dealer->play($deck);
+                    $result = $evaluator->judgeSplit([$userResult['splitOutcome'][0], $dealerResult]);
+                    $fund = $calculator->calculateMoneyForSplit($fund, $latch, $result);
+
+                } else {
+                    $dealerResult = $dealer->play($deck);
+                    $result = $evaluator->judgeSplit([$userResult['splitOutcome'][0], $userResult['splitOutcome'][1], $dealerResult]);
+                    $fund = $calculator->calculateMoneyForSplit($fund, $latch, $result);
+
+                }
+
+
+            } elseif ($userResult['bust'] || $userResult['surrender']) {
+                $result = $evaluator->judge([$userResult]);
+                $fund = $calculator->calculateMoney($fund, $latch, $result);
             } else {
                 $dealerResult = $dealer->play($deck);
-                $judgmentResult = $evaluator->judge([$userResult, $dealerResult]);
+                $result = $evaluator->judge([$userResult, $dealerResult]);
+                $fund = $calculator->calculateMoney($fund, $latch, $result);
             }
 
-            $calculator = new Calculator();
-            $fund = $calculator->calculateMoney($fund, $latch, $judgmentResult);
 
             echo 'あなたの資金は' . $fund . 'ドルです。' . PHP_EOL;
 
-            $continue = $this->getUserContinueOrStop($continue, $fund);
+            $continue = $this->getUserInputContinueOrStop($continue, $fund);
         }
 
 
@@ -62,7 +89,7 @@ class Game
     }
 
 
-    private function getUserContinueOrStop(bool $continue, float $fund): bool
+    private function getUserInputContinueOrStop(bool $continue, float $fund): bool
     {
         if ($fund < self::MIN_LATCH) {
             echo '資金が足りません。' . PHP_EOL;
@@ -74,7 +101,7 @@ class Game
         while (true) {
             $input = trim(fgets(STDIN));
             if ($input === 'Y') {
-                echo '------------------------------------' . PHP_EOL;
+                echo '-----------------------------------------' . PHP_EOL;
                 echo '次のゲームを開始します。' . PHP_EOL;
                 break;
             } elseif ($input === 'N') {
@@ -88,7 +115,7 @@ class Game
         return $continue;
     }
 
-    private function getUserBet(float $fund): float
+    private function getUserInputBet(float $fund): float
     {
         echo '何ドルベットしますか。' . PHP_EOL;
         echo 'ミニマムベット（最低賭け金）は' . self::MIN_LATCH . 'ドルです。数字を入力してください。' . PHP_EOL;

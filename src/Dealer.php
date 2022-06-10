@@ -37,7 +37,7 @@ class Dealer extends PlayerBase
                 return [
                     'name' => $this->name,
                     'bust' => $this->bust,
-                    'point' => $this->getPlayerPoint()
+                    'point' => $this->getPlayerPoint(),
                 ];
             }
         }
