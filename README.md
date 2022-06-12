@@ -45,8 +45,10 @@ Dockerの環境を使用します。
 ```
 # イメージをビルドします。
 $ docker-compose build
+
 # コンテナをバックグラウンドで起動します。
 $ docker-compose up -d
+
 # ブラックジャックゲームの開始です！
 $ docker-compose exec app php Blackjack.php
 ```
